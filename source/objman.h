@@ -8,7 +8,7 @@ private:
     std::vector<Gmobj> loadedObjects;
 public:
     int addObject(Gmobj gmobj);
-    void renderAll(const C3D_Mtx *mtxProj, const C3D_Mtx *mtxMod);
+    void renderAll(C3D_Mtx *mtxProj, C3D_Mtx *mtxMod);
     ObjectManager() {};
     ~ObjectManager() {};
 };

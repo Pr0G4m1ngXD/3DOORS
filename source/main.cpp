@@ -41,7 +41,7 @@ static C3D_Mtx material =
 static int frameNum = 0;
 static C3D_Tex kitten_tex;
 static float viewX = 0.0, viewY = 0.0;
-static float sensitivity = 10.0f; // Adjust the sensitivity as needed
+static float sensitivity = 10.0f;
 static float sensAccel = 0.00325f;
 static float deadzoneThreshold = 0.15f;
 static float camStoppingPower = 1.2f;
@@ -70,6 +70,7 @@ static bool loadTextureFromMem(C3D_Tex* tex, C3D_TexCube* cube, const void* data
 
 static void sceneInit(void)
 {
+	/*
 	// Load the vertex shader, create a shader program and bind it
 	vshader_dvlb = DVLB_ParseFile((u32*)vshader_shbin, vshader_shbin_size);
 	shaderProgramInit(&program);
@@ -93,7 +94,6 @@ static void sceneInit(void)
 	AttrInfo_AddLoader(attrInfo, 2, GPU_FLOAT, 3); // v2=normal
 
 	// Compute the projection matrix
-	Mtx_PerspTilt(&projection, C3D_AngleFromDegrees(70.0f), C3D_AspectRatioTop, 0.01f, 1000.0f, false);
 	
 	// Load the texture and bind it to the first texture unit
 	
@@ -102,7 +102,8 @@ static void sceneInit(void)
 	C3D_TexSetFilter(&kitten_tex, GPU_LINEAR, GPU_NEAREST);
 	C3D_TexBind(0, &kitten_tex);
 
-	
+	*/
+	Mtx_PerspTilt(&projection, C3D_AngleFromDegrees(70.0f), C3D_AspectRatioTop, 0.01f, 1000.0f, false);
 }
 
 static void sceneRender(void)
@@ -114,10 +115,8 @@ static void sceneRender(void)
 	#ifdef MEMDEBUG
 	printf("linearfree: %lu MB\n", linearSpaceFree() / 1048576); // \x1b[10;1H
 	#endif
-			// Calculate the modelView matrix
-			C3D_Mtx modelView;
-			Mtx_Identity(&modelView);
-			Mtx_Translate(&modelView, player.position.x, -player.visualHeight - player.position.y ,player.position.z - 2.0f, true);
+	/*
+			
 	
 	// Update the uniforms
 	C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, uLoc_projection, &projection);
@@ -129,7 +128,7 @@ static void sceneRender(void)
 
 
 	int offset = 0, objcount = 0;
-	/*for (size_t i = 0; i < objects.size(); i++) { // for loop through vector
+	for (size_t i = 0; i < objects.size(); i++) { // for loop through vector
     	int objVcount = objects[i].mesh.vertexList.size();
     	if (objVcount > 0) {
 			objects[i].mesh.renderBuffer();
@@ -144,7 +143,7 @@ static void sceneRender(void)
 		objcount++;
 	}*/
 
-
+	C3D_Mtx modelView;
 	objman.renderAll(&projection,&modelView);
 
 	
@@ -287,7 +286,7 @@ int main()
 	}
 
 	static Gmobj test5;
-			test5.mesh.objPath = "romfs:/suz2.obj";
+	test5.mesh.objPath = "romfs:/suz2.obj";
 	objman.addObject(test5);
 	
 	// Main loop
