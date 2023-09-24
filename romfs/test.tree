@@ -1,0 +1,24 @@
+gmobj rootobj {
+    mesh.objPath = "plane.obj"
+    position = 0.0 0.0 0.0
+    rotation = 0.0 0.0 0.0
+}
+
+gmobj test {
+    mesh.objPath = "suz2.obj"
+    position = 0.0 1.0 0.0
+    root = rootobj
+}
+
+gmobj other {
+    mesh.objPath = "sphere.obj"
+    position = 1.0 0.0 0.0
+    root = rootobj
+}
+
+gmobj recurse {
+    mesh.objPath = "cone.obj"
+    position = 0.0 1.0 0.0
+    rotation = 180.0 0.0 0.0
+    root = other
+}
