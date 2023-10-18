@@ -2,6 +2,7 @@
 #include <citro3d.h>
 #include <tex3ds.h>
 #include <string.h>
+//#include <chrono>
 #include <vector>
 #include "vshader_shbin.h"
 #include "kitten_t3x.h"
@@ -12,16 +13,12 @@
 
 #include "player.h"
 #include "gmobj.h"
-#include "objman.h"
+#include "mgr/objman.h"
+#include "mgr/renderman.h"
 
 #define M_PI 3.14159265358979323846
 
-#define CLEAR_COLOR 0x110221FF
-
-#define DISPLAY_TRANSFER_FLAGS \
-	(GX_TRANSFER_FLIP_VERT(0) | GX_TRANSFER_OUT_TILED(0) | GX_TRANSFER_RAW_COPY(0) | \
-	GX_TRANSFER_IN_FORMAT(GX_TRANSFER_FMT_RGBA8) | GX_TRANSFER_OUT_FORMAT(GX_TRANSFER_FMT_RGB8) | \
-	GX_TRANSFER_SCALING(GX_TRANSFER_SCALE_NO))
+static RenderManager renderman;
 
 static DVLB_s* vshader_dvlb;
 static shaderProgram_s program;
@@ -38,7 +35,6 @@ static C3D_Mtx material =
 	}
 };
 
-static int frameNum = 0;
 static C3D_Tex kitten_tex;
 static float viewX = 0.0, viewY = 0.0;
 static float sensitivity = 10.0f;
@@ -103,18 +99,10 @@ static void sceneInit(void)
 	C3D_TexBind(0, &kitten_tex);
 
 	*/
-	Mtx_PerspTilt(&projection, C3D_AngleFromDegrees(70.0f), C3D_AspectRatioTop, 0.01f, 1000.0f, false);
 }
 
 static void sceneRender(void)
 {
-	consoleClear();
-	frameNum++;
-	printf("framecount: %i \n", frameNum);
-
-	#ifdef MEMDEBUG
-	printf("linearfree: %lu MB\n", linearSpaceFree() / 1048576); // \x1b[10;1H
-	#endif
 	/*
 			
 	
@@ -198,7 +186,7 @@ static int handleInput(void) {
 		if (kDownInstant & KEY_Y){
 			Gmobj test;
 			test.mesh.objPath = "romfs:/suz2.obj";
-			test.init();
+			objman.addObject(test);
 			//objects.push_back(std::move(test));
 
 
@@ -206,7 +194,7 @@ static int handleInput(void) {
 		if (kDownInstant & KEY_A){
 			Gmobj test2;
 			test2.mesh.objPath = "romfs:/r6doors.obj";
-			test2.init();
+			objman.addObject(test2);
 			//objects.push_back(test2);
 		}
 		if (kDownInstant & KEY_X) {
@@ -243,47 +231,34 @@ static int handleInput(void) {
 	return 0;
 }
 
-static void sceneExit(void)
-{
-	// Free the texture
-	C3D_TexDelete(&kitten_tex);
-
-	// Free the shader program
-	shaderProgramFree(&program);
-	DVLB_Free(vshader_dvlb);
-}
 
 int main()
 {
 	// Initialize graphics
 	gfxInitDefault();
-	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
-
-	// Initialize the render target
-	C3D_RenderTarget* target = C3D_RenderTargetCreate(240, 400, GPU_RB_RGBA8, GPU_RB_DEPTH24_STENCIL8);
-	C3D_RenderTargetSetOutput(target, GFX_TOP, GFX_LEFT, DISPLAY_TRANSFER_FLAGS);
-
-	// Initialize the scene
-	sceneInit();
-
 	consoleInit(GFX_BOTTOM, NULL);
-
-	#ifdef DEBUGMODE
-	printf("*********************\n*                   *\n*  DEBUGMODE BUILD  *\n*                   *\n*********************\n");
-	#endif
-
+	// TODO: implement romfs in save manager class?
 	Result rc = romfsInit();
 	if (rc) {
 		printf("romfsInit: %08lX\n", rc);
 		printf("RomFS error: This application cannot    continue as it requires romfs!\n");
-		system("PAUSE");
-		sceneExit();
-		C3D_Fini();
 		gfxExit();
 		return 1;
 	} else {
 		printf("romfs Init Successful!\n");
 	}
+
+	
+
+	// Initialize the scene
+	renderman.readyFunction();
+
+
+	#ifdef DEBUGMODE
+	printf("*********************\n*                   *\n*  DEBUGMODE BUILD  *\n*                   *\n*********************\n");
+	#endif
+
+
 
 	static Gmobj test5;
 	test5.mesh.objPath = "romfs:/suz2.obj";
@@ -296,21 +271,15 @@ int main()
 		
 		if (handleInput() == 2) { break; } // Return to hbmenu if returned 2 (Close App No Function Error)
 		
-		
 		// Render the scene
-		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			C3D_RenderTargetClear(target, C3D_CLEAR_ALL, CLEAR_COLOR, 0);
-			C3D_FrameDrawOn(target);
-			sceneRender();
-		C3D_FrameEnd(0);
+		renderman.render();
 	}
 	//test5.~Gmobj();
 
 	// Deinitialize the scene
-	sceneExit();
+	renderman.done();
 
 	// Deinitialize graphics
-	C3D_Fini();
 	romfsExit();
 	gfxExit();
 	return 0;

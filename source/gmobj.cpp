@@ -14,13 +14,6 @@
 
 
 
-void Gmobj::init() {
-    // Implement loading of the .obj file here
-    // This may involve reading vertices, normals, and indices and creating VAOs, VBOs, and IBOs
-    mesh.loadMesh();
-    mesh.loadRender();
-}
-
 void Gmobj::uinit() {
     // Implement unloading of resources here
     // Delete VAOs, VBOs, IBOs, etc.

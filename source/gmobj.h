@@ -20,7 +20,6 @@ class Gmobj {
                 int uLoc_projection, uLoc_modelView;
                 DVLB_s* vshader_dvlb;
                 shaderProgram_s program;
-            protected:
                 C3D_BufInfo bufferInf;
                 C3D_AttrInfo attrInf;
                 C3D_FVec position;
@@ -37,8 +36,6 @@ class Gmobj {
                 void uloadRender();
         };
 
-        /// @brief initialize the object into scene
-        void init();
         /// @brief remove the object from scene
         void uinit();
 
