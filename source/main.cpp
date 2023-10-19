@@ -4,7 +4,6 @@
 #include <string.h>
 //#include <chrono>
 #include <vector>
-#include "vshader_shbin.h"
 #include "kitten_t3x.h"
 
 #include "define.h"
@@ -13,8 +12,8 @@
 
 #include "player.h"
 #include "gmobj.h"
-#include "mgr/objman.h"
-#include "mgr/renderman.h"
+#include "objman.h"
+#include "renderman.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -64,6 +63,7 @@ static bool loadTextureFromMem(C3D_Tex* tex, C3D_TexCube* cube, const void* data
 	return true;
 }
 
+// unused function, comments left for future use
 static void sceneInit(void)
 {
 	/*
@@ -101,6 +101,7 @@ static void sceneInit(void)
 	*/
 }
 
+// unused function, comments left for future use
 static void sceneRender(void)
 {
 	/*
@@ -132,7 +133,6 @@ static void sceneRender(void)
 	}*/
 
 	C3D_Mtx modelView;
-	objman.renderAll(&projection,&modelView);
 
 	
 	

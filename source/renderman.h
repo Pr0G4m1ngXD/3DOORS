@@ -1,3 +1,6 @@
+#include <3ds.h>
+#include <citro3d.h>
+
 // Implementing render functions
 class RenderManager 
 {
@@ -16,6 +19,6 @@ public:
     void readyFunction();
     void render();
     void done();
-    RenderManager(/* args */);
-    ~RenderManager();
+    RenderManager(/* args */) {};
+    ~RenderManager() {};
 };

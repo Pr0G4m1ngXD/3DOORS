@@ -10,7 +10,7 @@ protected:
     std::vector<Gmobj> loadedObjects;
 public:
     int addObject(Gmobj gmobj);
-    void renderAll(C3D_Mtx *mtxProj, C3D_Mtx *mtxMod);
+    // render moving to renderman
     ObjectManager() {};
     ~ObjectManager() {};
 };
