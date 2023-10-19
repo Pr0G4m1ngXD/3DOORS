@@ -272,7 +272,7 @@ int main()
 		if (handleInput() == 2) { break; } // Return to hbmenu if returned 2 (Close App No Function Error)
 		
 		// Render the scene
-		renderman.render();
+		renderman.render(objman);
 	}
 	//test5.~Gmobj();
 

@@ -4,6 +4,8 @@
 #include <vshader_shbin.h>
 #include <stdio.h>
 #include "define.h"
+#include "objman.h"
+#include "gmobj.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -49,7 +51,7 @@ void RenderManager::readyFunction()
     Mtx_PerspTilt(&projection, C3D_AngleFromDegrees(70.0f), C3D_AspectRatioTop, 0.01f, 1000.0f, false);
 }
 
-void RenderManager::render()
+void RenderManager::render(ObjectManager objman)
 {
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 	C3D_RenderTargetClear(target, C3D_CLEAR_ALL, CLEAR_COLOR, 0);
@@ -62,7 +64,9 @@ void RenderManager::render()
 	    printf("linearfree: %lu MB\n", linearSpaceFree() / 1048576); // \x1b[10;1H
 	#endif
 	// Render Objects
-
+	for (Gmobj i : objman.loadedObjects) {
+		// fuck this i give up 
+	};
 
 
 	C3D_FrameEnd(0);

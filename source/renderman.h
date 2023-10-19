@@ -1,5 +1,8 @@
+#pragma once
+
 #include <3ds.h>
 #include <citro3d.h>
+#include "objman.h"
 
 // Implementing render functions
 class RenderManager 
@@ -17,7 +20,7 @@ protected:
     int frameNum = 0;
 public:
     void readyFunction();
-    void render();
+    void render(ObjectManager objman);
     void done();
     RenderManager(/* args */) {};
     ~RenderManager() {};
